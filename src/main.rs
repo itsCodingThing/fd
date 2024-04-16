@@ -1,8 +1,8 @@
 use std::env;
+use std::fs;
 use std::process::exit;
-use std::{fs, io};
 
-fn main() -> io::Result<()> {
+fn main() {
     let list_args: Vec<(usize, String)> = env::args().enumerate().collect();
 
     if list_args.len() < 2 {
@@ -32,12 +32,36 @@ fn main() -> io::Result<()> {
 
             mk_cmd(cmd_args_parsed.to_string());
         }
+        "rm" => {
+            if list_args.len() < 3 {
+                println!("no rm args passed...!");
+                exit(0);
+            }
+            let cmd_args = list_args[2].clone();
+            let cmd_args_parsed = cmd_args.1.trim();
+
+            rm_cmd(cmd_args_parsed.to_string());
+        }
         _ => {
-            exit(0);
+            println!("invalid cmds...!");
         }
     }
+}
 
-    Ok(())
+fn rm_cmd(args: String) {
+    if args.ends_with("/") {
+        fs::remove_dir_all(args).unwrap_or_else(|_| {
+            println!("unable to delete dir.");
+            exit(0);
+        });
+        println!("dir removed.");
+    } else {
+        fs::remove_file(args).unwrap_or_else(|_| {
+            println!("unable to remove file.");
+            exit(0);
+        });
+        println!("file removed.");
+    }
 }
 
 fn mk_cmd(args: String) {
@@ -56,13 +80,19 @@ fn mk_cmd(args: String) {
     }
 }
 
-fn print_dir() -> io::Result<()> {
+fn print_dir() {
     let dir_path = "./";
 
-    for entry in fs::read_dir(dir_path)? {
-        let d = entry?;
-        let epath = d.path();
+    let entry_itr = fs::read_dir(dir_path).unwrap_or_else(|_| {
+        println!("unable to read dir.");
+        exit(0);
+    });
 
+    for entry in entry_itr {
+        let d = entry.unwrap_or_else(|_| {
+            exit(0);
+        });
+        let epath = d.path();
         let fname = epath.file_name().unwrap();
 
         if epath.is_dir() {
@@ -71,6 +101,4 @@ fn print_dir() -> io::Result<()> {
             println!("{:?}", fname)
         }
     }
-
-    Ok(())
 }
