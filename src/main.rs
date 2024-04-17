@@ -22,34 +22,13 @@ fn main() {
             let _ = Cmd::print_cmd();
         }
         Cmds::Mkd => {
-            if list_args.len() < 3 {
-                println!("no mk args passed...!");
-                exit(0);
-            }
-            let cmd_args = list_args[2].clone();
-            let cmd_args_parsed = cmd_args.trim();
-
-            Cmd::mkd_cmd(cmd_args_parsed.to_string());
+            Cmd::mkd_cmd(cmd_parsed.args);
         }
         Cmds::Mkf => {
-            if list_args.len() < 3 {
-                println!("no mk args passed...!");
-                exit(0);
-            }
-            let cmd_args = list_args[2].clone();
-            let cmd_args_parsed = cmd_args.trim();
-
-            Cmd::mkf_cmd(cmd_args_parsed.to_string());
+            Cmd::mkf_cmd(cmd_parsed.args);
         }
         Cmds::Rm => {
-            if list_args.len() < 3 {
-                println!("no rm args passed...!");
-                exit(0);
-            }
-            let cmd_args = list_args[2].clone();
-            let cmd_args_parsed = cmd_args.trim();
-
-            Cmd::rm_cmd(cmd_args_parsed.to_string());
+            Cmd::rm_cmd(cmd_parsed.args);
         }
     }
 }

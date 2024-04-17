@@ -10,43 +10,43 @@ pub enum Cmds {
 
 pub struct CmdParsed {
     pub cmd: Cmds,
-    pub args: Vec<String>,
+    pub args: String,
 }
 
 pub struct Cmd;
 impl Cmd {
     pub fn parse_cmd(args: Vec<String>) -> Option<CmdParsed> {
         let copy_args = args.clone();
-        // parse command
         if args.len() < 1 || !args[0].starts_with("--") {
             println!("wrong cmd passed...!");
             return None;
         }
 
         let dirty_cmd = copy_args[0].clone().split_off(2);
+        let cmd_input = copy_args[1].clone().trim().to_string();
         match dirty_cmd.as_str() {
             "ls" => {
                 return Some(CmdParsed {
                     cmd: Cmds::Ls,
-                    args: Vec::from([String::from("args for ls")]),
+                    args: cmd_input,
                 });
             }
             "mkd" => {
                 return Some(CmdParsed {
                     cmd: Cmds::Mkd,
-                    args: Vec::from([String::from("args for mkd")]),
+                    args: cmd_input,
                 });
             }
             "mkf" => {
                 return Some(CmdParsed {
                     cmd: Cmds::Mkf,
-                    args: Vec::from([String::from("args for mkf")]),
+                    args: cmd_input,
                 });
             }
             "rm" => {
                 return Some(CmdParsed {
                     cmd: Cmds::Rm,
-                    args: Vec::from([String::from("args for rm")]),
+                    args: cmd_input,
                 });
             }
             _ => {
