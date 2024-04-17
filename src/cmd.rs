@@ -1,26 +1,58 @@
 use std::fs;
 use std::process::exit;
 
+pub enum Cmds {
+    Ls,
+    Mkd,
+    Mkf,
+    Rm,
+}
+
 pub struct CmdParsed {
-    pub cmd: String,
+    pub cmd: Cmds,
     pub args: Vec<String>,
 }
 
 pub struct Cmd;
 impl Cmd {
-    pub fn parse_cmd(args: Vec<String>) -> Result<CmdParsed, ()> {
-        let cmd = CmdParsed {
-            cmd: String::from(""),
-            args: Vec::new(),
-        };
-
+    pub fn parse_cmd(args: Vec<String>) -> Option<CmdParsed> {
+        let copy_args = args.clone();
         // parse command
         if args.len() < 1 || !args[0].starts_with("--") {
             println!("wrong cmd passed...!");
-            return Err(());
+            return None;
         }
 
-        return Ok(cmd);
+        let dirty_cmd = copy_args[0].clone().split_off(2);
+        match dirty_cmd.as_str() {
+            "ls" => {
+                return Some(CmdParsed {
+                    cmd: Cmds::Ls,
+                    args: Vec::from([String::from("args for ls")]),
+                });
+            }
+            "mkd" => {
+                return Some(CmdParsed {
+                    cmd: Cmds::Mkd,
+                    args: Vec::from([String::from("args for mkd")]),
+                });
+            }
+            "mkf" => {
+                return Some(CmdParsed {
+                    cmd: Cmds::Mkf,
+                    args: Vec::from([String::from("args for mkf")]),
+                });
+            }
+            "rm" => {
+                return Some(CmdParsed {
+                    cmd: Cmds::Rm,
+                    args: Vec::from([String::from("args for rm")]),
+                });
+            }
+            _ => {
+                return None;
+            }
+        }
     }
 
     pub fn rm_cmd(args: String) {
