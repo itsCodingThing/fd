@@ -19,7 +19,7 @@ fn main() {
 
     match cmd_parsed.cmd {
         Cmds::Ls => {
-            let _ = Cmd::print_cmd();
+            Cmd::print_cmd();
         }
         Cmds::Mkd => {
             Cmd::mkd_cmd(cmd_parsed.args);
@@ -29,6 +29,9 @@ fn main() {
         }
         Cmds::Rm => {
             Cmd::rm_cmd(cmd_parsed.args);
+        }
+        Cmds::Zp => {
+            Cmd::zp_cmd();
         }
     }
 }

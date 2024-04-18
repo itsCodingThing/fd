@@ -6,6 +6,7 @@ pub enum Cmds {
     Mkd,
     Mkf,
     Rm,
+    Zp,
 }
 
 pub struct CmdParsed {
@@ -17,42 +18,53 @@ pub struct Cmd;
 impl Cmd {
     pub fn parse_cmd(args: Vec<String>) -> Option<CmdParsed> {
         let copy_args = args.clone();
-        if args.len() < 1 || !args[0].starts_with("--") {
-            println!("wrong cmd passed...!");
+        if args.len() == 0 || !args[0].starts_with("--") {
             return None;
         }
 
         let dirty_cmd = copy_args[0].clone().split_off(2);
-        let cmd_input = copy_args[1].clone().trim().to_string();
         match dirty_cmd.as_str() {
             "ls" => {
                 return Some(CmdParsed {
                     cmd: Cmds::Ls,
-                    args: cmd_input,
+                    args: String::new(),
                 });
             }
             "mkd" => {
+                let cmd_input = copy_args[1].clone().trim().to_string();
                 return Some(CmdParsed {
                     cmd: Cmds::Mkd,
                     args: cmd_input,
                 });
             }
             "mkf" => {
+                let cmd_input = copy_args[1].clone().trim().to_string();
                 return Some(CmdParsed {
                     cmd: Cmds::Mkf,
                     args: cmd_input,
                 });
             }
             "rm" => {
+                let cmd_input = copy_args[1].clone().trim().to_string();
                 return Some(CmdParsed {
                     cmd: Cmds::Rm,
                     args: cmd_input,
+                });
+            }
+            "zp" => {
+                return Some(CmdParsed {
+                    cmd: Cmds::Zp,
+                    args: String::new(),
                 });
             }
             _ => {
                 return None;
             }
         }
+    }
+
+    pub fn zp_cmd() {
+        println!("need to implement");
     }
 
     pub fn rm_cmd(args: String) {
@@ -100,12 +112,18 @@ impl Cmd {
                 exit(0);
             });
             let epath = d.path();
-            let fname = epath.file_name().unwrap();
+            let fname = match epath.file_name() {
+                Some(name) => name.to_string_lossy(),
+                None => {
+                    println!("uable to read file name....");
+                    exit(0);
+                }
+            };
 
             if epath.is_dir() {
-                println!("/{:?}", fname);
+                println!("/{fname}");
             } else {
-                println!("{:?}", fname)
+                println!("{fname}");
             }
         }
     }
